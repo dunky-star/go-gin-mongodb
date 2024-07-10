@@ -84,12 +84,12 @@ func (userCtrl *UserController) DeleteUser(ctx *gin.Context) {
 
 // Route group for user controller
 func (userCtrl *UserController) RegisterUserRoutes(rg *gin.RouterGroup){
-	userroute := rg.Group("/user")
-	userroute.POST("/create", userCtrl.CreateUser)
-	userroute.GET("/:name", userCtrl.GetUser)
-	userroute.GET("/detail", userCtrl.GetAll)
-	userroute.PUT("/update", userCtrl.UpdateUser)
-	userroute.DELETE("/:name", userCtrl.DeleteUser)
+	userroute := rg.Group("/v1")
+	userroute.POST("/users", userCtrl.CreateUser)
+	userroute.GET("/users/:name", userCtrl.GetUser)
+	userroute.GET("/users", userCtrl.GetAll)
+	userroute.PUT("/users/:name", userCtrl.UpdateUser)
+	userroute.DELETE("/users/:name", userCtrl.DeleteUser)
 }
 
 

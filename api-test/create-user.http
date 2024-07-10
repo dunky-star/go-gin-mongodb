@@ -1,0 +1,12 @@
+POST http://localhost:9090/api/v1/users/create
+content-type: application/json
+
+{
+    "name": "Geoffrey D. Opiyo",
+    "age": 29,
+    "address": {
+        "state": "IA",
+        "city": "Fairfield",
+        "Zipcode": 52557
+    }
+}

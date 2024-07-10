@@ -48,7 +48,7 @@ func init() {
 func main() {
 	defer mongoclient.Disconnect(ctx)
 
-    basepath := server.Group("/api/v1")
+    basepath := server.Group("/api")
     usercontroller.RegisterUserRoutes(basepath)
 
     log.Fatal(server.Run(":9090"))

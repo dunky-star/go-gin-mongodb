@@ -1,4 +1,4 @@
-package contollers
+package controllers
 
 import (
 	"dunky-star/gin-mongodb-apis/models"
@@ -35,32 +35,61 @@ func (userCtrl *UserController) CreateUser(ctx *gin.Context) {
 }
 
 func (userCtrl *UserController) GetUser(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"Message": "message"})
+	var username = ctx.Param("name")
+	user, err := userCtrl.UserService.GetUser(&username)
+ 	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
 }
 
 
 func (userCtrl *UserController) GetAll(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"Message": "message"})
+	users, err := userCtrl.UserService.GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, users)
 }
 
 
 func (userCtrl *UserController) UpdateUser(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"Message": "message"})
+	var user models.User
+	if err := ctx.ShouldBindJSON(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	err := userCtrl.UserService.UpdateUser(&user)
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
 }
 
 
 func (userCtrl *UserController) DeleteUser(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"Message": "message"})
+	username := ctx.Param("name")
+	err := userCtrl.UserService.DeleteUser(&username)
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"Message": "User deleted successfully!"})
 }
 
 // Route group for user controller
 func (userCtrl *UserController) RegisterUserRoutes(rg *gin.RouterGroup){
-	userroute := rg.Group("/api/user")
+	userroute := rg.Group("/user")
 	userroute.POST("/create", userCtrl.CreateUser)
 	userroute.GET("/:name", userCtrl.GetUser)
 	userroute.GET("/detail", userCtrl.GetAll)
 	userroute.PUT("/update", userCtrl.UpdateUser)
-	userroute.DELETE("/delete", userCtrl.DeleteUser)
+	userroute.DELETE("/:name", userCtrl.DeleteUser)
 }
 
 
